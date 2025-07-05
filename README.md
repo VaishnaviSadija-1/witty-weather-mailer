@@ -45,8 +45,8 @@ It may be a small project, but it taught me a lot and makes my mornings more enj
 
 ## 🙋‍♀️ Made By
 
-Built with ☕ and curiosity by **[Your Name]**  
-📫 Reach me at: your.email@example.com
+Built with ☕ and curiosity by Vaishnavi Anil Sadija  
+📫 Reach me at: sadijavaishnavi1@gmail.com
 
 ---
 
