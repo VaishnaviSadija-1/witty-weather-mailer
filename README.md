@@ -25,8 +25,10 @@ This n8n automation fetches your local forecast every morning at **7:00 AM** and
 
 ## 📸 Screenshot
 
-![Weather Workflow](./screenshot.png) <!-- Replace with your actual image link or file path -->
+![Weather Workflow]
+<img width="1859" height="725" alt="Image" src="https://github.com/user-attachments/assets/5932ed92-3dda-4340-bae3-1cacef164f35" />
 
+<img width="1491" height="376" alt="Image" src="https://github.com/user-attachments/assets/69810ed1-0683-4be2-b09f-e809d7ac72b8" />
 ---
 
 ## 🧪 Why I Built This
