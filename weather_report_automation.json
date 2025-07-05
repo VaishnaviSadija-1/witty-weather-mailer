@@ -1,0 +1,137 @@
+{
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "92b1c56b-ef5c-410b-abaa-e5e8064d9b98",
+      "name": "Manual Test"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 6
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        160
+      ],
+      "id": "fa5cf8b5-f050-4bd6-9738-fac2b4045b65",
+      "name": "6AM Schedule"
+    },
+    {
+      "parameters": {
+        "url": "https://api.open-meteo.com/v1/forecast?latitude=41.87&longitude=87.62&hourly=temperature_2m&forecast_days=3&wind_speed_unit=mph&temperature_unit=fahrenheit",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        340,
+        60
+      ],
+      "id": "4797851e-ba7d-4091-80ba-bcc8e5ce37ee",
+      "name": "Gets weather"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get input JSON data\nconst weatherData = items[0].json;\n\n// Extract today's date (assuming UTC)\nconst today = new Date().toISOString().slice(0, 10);\n\n// Get temperature and time arrays\nconst times = weatherData.hourly.time;\nconst temps = weatherData.hourly.temperature_2m;\n\n// Filter temperatures for today only\nconst todayTemps = times.reduce((arr, time, i) => {\n  if (time.startsWith(today)) {\n    arr.push(temps[i]);\n  }\n  return arr;\n}, []);\n\n// Compute high and low\nconst high = Math.max(...todayTemps);\nconst low = Math.min(...todayTemps);\n\n// Return the message\nreturn [\n  {\n    json: {\n      message: `In Chicago, the high today is ${high}°F and the low is ${low}°F.`\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        560,
+        60
+      ],
+      "id": "ee0ae8ce-46bd-4735-9856-0a004dcd6ed5",
+      "name": "Creates message"
+    },
+    {
+      "parameters": {
+        "sendTo": "sadijavaishnavi1@gmail.com",
+        "subject": "Weather Report for Today!",
+        "message": "={{ $json.message }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        780,
+        60
+      ],
+      "id": "6385292a-c4bf-466f-a5c3-aff7f42e5dfe",
+      "name": "Send a message",
+      "webhookId": "6c2ec18a-d94c-4b07-8667-5031be95ac8c",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "tZHwr3A645Jo3EJ6",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Manual Test": {
+      "main": [
+        [
+          {
+            "node": "Gets weather",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "6AM Schedule": {
+      "main": [
+        [
+          {
+            "node": "Gets weather",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gets weather": {
+      "main": [
+        [
+          {
+            "node": "Creates message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Creates message": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3bf809bca3b36b04ac53a6dd78d008bcf9489132f51ad120b2c09d78c8a68d41"
+  }
+}
